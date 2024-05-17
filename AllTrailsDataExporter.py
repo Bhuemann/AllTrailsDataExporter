@@ -5,6 +5,7 @@ from datetime import datetime
 from enum import Enum
 import base64
 import hashlib
+import math
 
 class TrailsDownloader:
 
@@ -17,7 +18,7 @@ class TrailsDownloader:
         "Colorado": { "ID": 6, "Abbreviation": "CO", "BoundingBox": [-109.060253,36.992426,-102.041524,41.003444]},
         "Connecticut": { "ID": 7, "Abbreviation": "CT", "BoundingBox": [-73.727775,40.980144,-71.786994,42.050587]},
         "Delaware": { "ID": 8, "Abbreviation": "DE", "BoundingBox": [-75.788658,38.451013,-75.048939,39.839007]},
-        "District of Columbia": { "ID": 9, "Abbreviation": "DC", "BoundingBox": [-77.119759,38.791645,-76.909395,38.99511]},
+        "District_of_Columbia": { "ID": 9, "Abbreviation": "DC", "BoundingBox": [-77.119759,38.791645,-76.909395,38.99511]},
         "Florida": { "ID": 10, "Abbreviation": "FL", "BoundingBox": [-87.634938,24.523096,-80.031362,31.000888]},
         "Georgia": { "ID": 11, "Abbreviation": "GA", "BoundingBox": [-85.605165,30.357851,-80.839729,35.000659]},
         "Hawaii": { "ID": 6050, "Abbreviation": "HI", "BoundingBox": [-178.334698,18.910361,-154.806773,28.402123]},
@@ -38,26 +39,26 @@ class TrailsDownloader:
         "Montana": { "ID": 27, "Abbreviation": "MT", "BoundingBox": [-116.050003,44.358221,-104.039138,49.00139]},
         "Nebraska": { "ID": 28, "Abbreviation": "NE", "BoundingBox": [-104.053514,39.999998,-95.30829,43.001708]},
         "Nevada": { "ID": 29, "Abbreviation": "NV", "BoundingBox": [-120.005746,35.001857,-114.039648,42.002207]},
-        "New Hampshire": { "ID": 30, "Abbreviation": "NH", "BoundingBox": [-72.557247,42.69699,-70.610621,45.305476]},
-        "New Jersey": { "ID": 31, "Abbreviation": "NJ", "BoundingBox": [-75.559614,38.928519,-73.893979,41.357423]},
-        "New Mexico": { "ID": 32, "Abbreviation": "NM", "BoundingBox": [-109.050173,31.332301,-103.001964,37.000232]},
-        "New York": { "ID": 33, "Abbreviation": "NY", "BoundingBox": [-79.762152,40.496103,-71.856214,45.01585]},
-        "North Carolina": { "ID": 34, "Abbreviation": "NC", "BoundingBox": [-84.321869,33.842316,-75.460621,36.588117]},
-        "North Dakota": { "ID": 35, "Abbreviation": "ND", "BoundingBox": [-104.0489,45.935054,-96.554507,49.000574]},
+        "New_Hampshire": { "ID": 30, "Abbreviation": "NH", "BoundingBox": [-72.557247,42.69699,-70.610621,45.305476]},
+        "New_Jersey": { "ID": 31, "Abbreviation": "NJ", "BoundingBox": [-75.559614,38.928519,-73.893979,41.357423]},
+        "New_Mexico": { "ID": 32, "Abbreviation": "NM", "BoundingBox": [-109.050173,31.332301,-103.001964,37.000232]},
+        "New_York": { "ID": 33, "Abbreviation": "NY", "BoundingBox": [-79.762152,40.496103,-71.856214,45.01585]},
+        "North_Carolina": { "ID": 34, "Abbreviation": "NC", "BoundingBox": [-84.321869,33.842316,-75.460621,36.588117]},
+        "North_Dakota": { "ID": 35, "Abbreviation": "ND", "BoundingBox": [-104.0489,45.935054,-96.554507,49.000574]},
         "Ohio": { "ID": 36, "Abbreviation": "OH", "BoundingBox": [-84.820159,38.403202,-80.518693,41.977523]},
         "Oklahoma": { "ID": 37, "Abbreviation": "OK", "BoundingBox": [-103.002565,33.615833,-94.430662,37.002206]},
         "Oregon": { "ID": 38, "Abbreviation": "OR", "BoundingBox": [-124.566244,41.991794,-116.463504,46.292035]},
         "Pennsylvania": { "ID": 39, "Abbreviation": "PA", "BoundingBox": [-80.519891,39.7198,-74.689516,42.26986]},
-        "Rhode Island": { "ID": 40, "Abbreviation": "RI", "BoundingBox": [-71.862772,41.146339,-71.12057,42.018798]},
-        "South Carolina": { "ID": 41, "Abbreviation": "SC", "BoundingBox": [-83.35391,32.0346,-78.54203,35.215402]},
-        "South Dakota": { "ID": 42, "Abbreviation": "SD", "BoundingBox": [-104.057698,42.479635,-96.436589,45.94545]},
+        "Rhode_Island": { "ID": 40, "Abbreviation": "RI", "BoundingBox": [-71.862772,41.146339,-71.12057,42.018798]},
+        "South_Carolina": { "ID": 41, "Abbreviation": "SC", "BoundingBox": [-83.35391,32.0346,-78.54203,35.215402]},
+        "South_Dakota": { "ID": 42, "Abbreviation": "SD", "BoundingBox": [-104.057698,42.479635,-96.436589,45.94545]},
         "Tennessee": { "ID": 43, "Abbreviation": "TN", "BoundingBox": [-90.310298,34.982972,-81.6469,36.678118]},
         "Texas": { "ID": 44, "Abbreviation": "TX", "BoundingBox": [-106.645646,25.837377,-93.508292,36.500704]},
         "Utah": { "ID": 45, "Abbreviation": "UT", "BoundingBox": [-114.052962,36.997968,-109.041058,42.001567]},
         "Vermont": { "ID": 46, "Abbreviation": "VT", "BoundingBox": [-73.43774,42.726853,-71.464555,45.016659]},
         "Virginia": { "ID": 47, "Abbreviation": "VA", "BoundingBox": [-83.675395,36.540738,-75.242266,39.466012]},
         "Washington": { "ID": 48, "Abbreviation": "WA", "BoundingBox": [-124.763068,45.543541,-116.915989,49.002494]},
-        "West Virginia": { "ID": 49, "Abbreviation": "WV", "BoundingBox": [-82.644739,37.201483,-77.719519,40.638801]},
+        "West_Virginia": { "ID": 49, "Abbreviation": "WV", "BoundingBox": [-82.644739,37.201483,-77.719519,40.638801]},
         "Wisconsin": { "ID": 50, "Abbreviation": "WI", "BoundingBox": [-92.888114,42.491983,-86.805415,47.080621]},
         "Wyoming": { "ID": 51, "Abbreviation": "WY", "BoundingBox": [-111.056888,40.994746,-104.05216,45.005904]}
     }
@@ -68,7 +69,7 @@ class TrailsDownloader:
 
     def getHikesByState(self, state):
 
-        hikes = list()
+        hikes = dict()
 
         stateDetails = self.StateMap[state]
         lngMin, latMin, lngMax, latMax = stateDetails['BoundingBox']
@@ -92,7 +93,7 @@ class TrailsDownloader:
             nbHits = response['nbHits']
 
             if nbHits < 1000:
-                hikes.extend(hits)
+                hikes.update({v['ID']:v for v in hits})
                 left = right
                 print(f"Processing {state}. Captured {len(hikes)} hikes", end='\r', flush=True)
             else:
@@ -101,43 +102,51 @@ class TrailsDownloader:
 
         print(f"{state} Complete! Captured {len(hikes)} hikes" + " "*10)
 
-        return hikes
+        return hikes.values()
 
 
 class TrailsExporter:
      
     class CsvHeader(Enum):
         Unique_Id = 0
-        Trail_Name = 1
-        Source = 2
-        Distance = 3
-        Elevation_Gain = 4
-        Highest_Point = 5
-        Difficulty = 6
-        Est_Hike_Duration = 7
-        Trail_Type = 8
-        Rating = 9
-        Area = 10
-        State = 11
-        Country = 12
-        Latitude = 13
-        Longitude = 14
-        Review_Count = 15
-        Url = 16
-        Cover_Photo = 17
-        Parsed_Date = 18
+        Alt_Id = 1
+        Trail_Name = 2
+        Source = 3
+        Distance = 4
+        Elevation_Gain = 5
+        Highest_Point = 6
+        Difficulty = 7
+        Est_Hike_Duration = 8
+        Trail_Type = 9
+        Permits = 10
+        Rating = 11
+        Review_Count = 12
+        Area = 13
+        State = 14
+        Country = 15
+        Latitude = 16
+        Longitude = 17
+        Url = 18
+        Cover_Photo = 19
+        Parsed_Date = 20
 
     def getTrailAttribute(self, hike, attribute):
+
+        truncate = lambda f, n: math.floor(f * 10 ** n) / 10 ** n
+
         match attribute:
             case self.CsvHeader.Unique_Id:
-                trailName = self.getTrailAttribute(hike, self.CsvHeader.Trail_Name)
+                uniqueName = self.getTrailAttribute(hike, self.CsvHeader.Url).partition('trail/')[2]
                 source = self.getTrailAttribute(hike, self.CsvHeader.Source)
                 latitude = self.getTrailAttribute(hike, self.CsvHeader.Latitude)
                 longitude = self.getTrailAttribute(hike, self.CsvHeader.Longitude)
 
-                joinKey = '-'.join([trailName, source, str(round(latitude, 3)), str(round(longitude, 3))])
+                joinKey = '&'.join([uniqueName, source, str(truncate(latitude, 3)), str(truncate(longitude, 3))])
                 id = hashlib.sha1(joinKey.encode("UTF-8")).hexdigest()
                 return id[:12]
+
+            case self.CsvHeader.Alt_Id:
+                return hike.get('ID', None)
 
             case self.CsvHeader.Trail_Name:
                 return hike.get('name', None)
@@ -166,6 +175,9 @@ class TrailsExporter:
             case self.CsvHeader.Est_Hike_Duration:
                 return hike.get('duration_minutes_hiking', None)
 
+            case self.CsvHeader.Permits:
+                return None
+
             case self.CsvHeader.Trail_Type:
                 trailMap = {'O': 'Out & Back', 'L': 'Loop', 'P': 'Point-to-Point'}
                 type = hike.get('route_type', None)
@@ -174,6 +186,9 @@ class TrailsExporter:
             case self.CsvHeader.Rating:
                 return hike.get('avg_rating', None)
 
+            case self.CsvHeader.Review_Count:
+                return hike.get('num_reviews', None)
+            
             case self.CsvHeader.Area:
                 return hike.get('area_name', None)
 
@@ -190,9 +205,6 @@ class TrailsExporter:
             case self.CsvHeader.Longitude:
                 location = hike.get('_geoloc', None)
                 return location.get('lng', None) if location else None
-
-            case self.CsvHeader.Review_Count:
-                return hike.get('num_reviews', None)
 
             case self.CsvHeader.Url:
                 slug = hike.get('slug', None)
@@ -213,10 +225,10 @@ class TrailsExporter:
                     encodedData = base64.b64encode(bytes(assetData,'utf-8')) 
                     return "https://images.alltrails.com/" + encodedData.decode('utf-8')
                 
-                return None
+                return None 
 
             case self.CsvHeader.Parsed_Date:
-                return datetime.now().date()
+                return datetime.now().date().isoformat()
 
     def exportToCsv(self, hikes, exportPath):
 
@@ -230,10 +242,14 @@ class TrailsExporter:
         hike_data.to_csv(exportPath, index = False)
 
 
-# if __name__ == "__main__":
-#     downloader = TrailsDownloader()
-#     exporter = TrailsExporter()
+if __name__ == "__main__":
+    downloader = TrailsDownloader()
+    exporter = TrailsExporter()
 
-#     for state in TrailsDownloader.StateMap.keys():
-#         hikes = downloader.getHikesByState(state)
-#         exporter.exportToCsv(hikes, f"./data/{state}_{datetime.now().date()}.csv")
+    hikesList = []
+    for state in TrailsDownloader.StateMap.keys():
+        hikes = downloader.getHikesByState(state)
+        exporter.exportToCsv(hikes, f"./data/{state}_{datetime.now().date()}.csv")
+        hikesList.extend(hikes)
+
+    exporter.exportToCsv(hikesList, f"./data/AllTrails_Data_Full_{datetime.now().date()}.csv")
