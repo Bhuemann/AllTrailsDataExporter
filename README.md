@@ -23,5 +23,4 @@ Data extracted will have the following rows:
 - `Longitude` 
 - `Url` 
 - `Cover_Photo` 
-- `Parsed_Date` 
-- 
+- `Parsed_Date`
